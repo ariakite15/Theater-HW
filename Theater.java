@@ -135,31 +135,30 @@ class SeatMap{
 }
 
 class Seat{
-    static boolean reserved;
+    String reserver_name;
 
     Seat(){
-        reserved = false;
-
+        reserver_name = null; //reference variable currently points to nothing
     }
-    String getName(String reserver){
-        return reserver;
 
+    String getName(){
+        return reserver_name;
     }
 
     void cancel(){
-
+        reserver_name = null;
     }
 
-    void setName(){
-
+    void setName(String name){
+        reserver_name = name;
     }
 
-    static boolean isOccupied(){
-        return reserved;
+    boolean isOccupied(){
+        return (reserver_name != null);
     }
 
-    void match(){
-
+    boolean match(String name){
+        return (reserver_name.equals(name));
     }
 }
 
