@@ -6,7 +6,7 @@ import java.util.InputMismatchException;
  * Created by cap on 4/15/16.
  */
 
-class SeatMap2{
+class SeatMap{
 
     private int _row, _column;
     private Seat _seat[][];
