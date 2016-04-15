@@ -10,14 +10,12 @@ class SeatMap{
 
     private int _row, _column;
     private Seat _seat[][];
-    Scanner input;
 
     SeatMap(int row, int column){ //constructor
         _row = row;
         _column= column;
         _seat = new Seat[_row][_column];
         seat_allocate();
-        input = new Scanner(System.in);
     }
 
     private void seat_allocate() {
@@ -29,70 +27,105 @@ class SeatMap{
 
     void reserve(){
         String _name;
-        int _reserveSeat;
+        String _reserveSeat;
         String _seatLetter;
+        boolean isMore = true;
+        boolean flag;
         int _seatNumber;
         int _seatNumber2;
 
         System.out.print("Name: ");
-        _name = input.next();
+        _name = Theater.input.next();
 
 
         try{
-            System.out.print("Number of seats: ");
-            _reserveSeat = input.nextInt();
+            do {
+                System.out.print("(O)ne or (M)ore? ");
+                _reserveSeat = Theater.input.next();
+                switch (_reserveSeat) {
+                    case "O":
+                    case "o":
+                    case "One":
+                    case "one":
+                        isMore = false;
+                        flag = false;
+                        break;
+
+                    case "M":
+                    case "m":
+                    case "More":
+                    case "more":
+                        isMore = true;
+                        flag = false;
+                        break;
+
+                    default:
+                        System.out.println("You have inputted an invalid option.");
+                        flag = true;
+                }
+            }while(flag);
 
 
             System.out.print("Seat row alphabet: ");
-            _seatLetter = input.next();
+            _seatLetter = Theater.input.next();
 
             if(_seatLetter.length() > 1 || _seatLetter.charAt(0) < 'A' || _seatLetter.charAt(0) > 'E'){
-                throw new InputMismatchException();
+                throw (new InputMismatchException());
             }
 
-            if(1 < _reserveSeat && _reserveSeat <= 9){
+            if(isMore) {
                 System.out.print("Reserve seat number from: ");
-                _seatNumber = input.nextInt();
+                _seatNumber = Theater.input.nextInt() - 1;
                 System.out.print("to: ");
-                _seatNumber2 = input.nextInt();
+                _seatNumber2 = Theater.input.nextInt() - 1;
+                flag = true;
 
-                if(_seatNumber > _seatNumber2){
-                    for(int column_indx = _seatNumber; column_indx <= _seatNumber2; _seatNumber++){
-                        if (_seat[_seatLetter.charAt(0) - 'A'][column_indx].isOccupied()){
-                            System.out.print("You cannot reserve the seats in this area.");
+                if(_seatNumber < 1 || _seatNumber > 9 || _seatNumber2 < 1 || _seatNumber2 > 9)
+                    throw(new InputMismatchException());
+
+                if (_seatNumber > _seatNumber2) {
+                    for (int column_indx = _seatNumber; column_indx <= _seatNumber2; _seatNumber++) {
+                        if (_seat[_seatLetter.charAt(0) - 'A'][column_indx].isOccupied()) {
+                            System.out.println("You cannot reserve the seats in this area.");
+                            flag = false;
                             break;
                         }
                     }
-                    for(int row_indx = 0; row_indx < _row; row_indx++) {
-                        for (int column_indx = 0; column_indx < _column; column_indx++){
-
+                    if (flag) {
+                        for (int column_indx = _seatNumber; column_indx <= _seatNumber2; _seatNumber++) {
+                            _seat[_seatLetter.charAt(0) - 'A'][column_indx].setName(_name);
 
                         }
                     }
-
-                    // how to show the reservation changes on the seating chart?
-
-                }
-                else{
-                    for(int column_indx = _seatNumber2; column_indx >= _seatNumber; column_indx--){
-                        if(_seat[_seatLetter.charAt(0) - 'A'][column_indx].isOccupied()){
-                            System.out.print("You cannot reserve the seats in this area.");
+                } else {
+                    for (int column_indx = _seatNumber2; column_indx >= _seatNumber; column_indx--) {
+                        if (_seat[_seatLetter.charAt(0) - 'A'][column_indx].isOccupied()) {
+                            System.out.println("You cannot reserve the seats in this area.");
+                            flag = false;
                             break;
                         }
                     }
-                    // how to how to show the reservation changes on the seating chart?
+                    if (flag) {
+                        for (int column_indx = _seatNumber2; column_indx >= _seatNumber; column_indx--) {
+                            _seat[_seatLetter.charAt(0) - 'A'][column_indx].setName(_name);
+                        }
+                    }
                 }
-
-
             }
-            else if(_reserveSeat == 1) {
+            else { // reserve one seat
                 System.out.print("Seat number: ");
-                _seatNumber = input.nextInt();
-                // how to show the reservation changes on the seating chart? do you call isOccupied()?
-            }
-            else
-                System.out.println("You can only reserve betweeen 1-9 seats.");
+                _seatNumber = Theater.input.nextInt() - 1;
+                if(_seatNumber < 1 || _seatNumber > 9)
+                    throw(new InputMismatchException());
 
+                if (_seat[_seatLetter.charAt(0) - 'A'][_seatNumber].isOccupied()) {
+                    System.out.println("You cannot reserve this seat.");
+                }
+                else {
+                    _seat[_seatLetter.charAt(0) - 'A'][_seatNumber].setName(_name);
+                }
+
+            }
         }
         catch(InputMismatchException e){
             System.out.println("You have entered either an invalid number or alphabet.");
@@ -101,12 +134,31 @@ class SeatMap{
     }
 
     void view(){
-        System.out.println();
-        //System.out.println(Seat.getName(reserver));
-
+        int n = 1;
+        for(int row_indx = 0; row_indx < _row; row_indx++) {
+            for (int column_indx = 0; column_indx < _column; column_indx++) {
+                if (_seat[row_indx][column_indx].isOccupied()) {
+                    System.out.println(n++ + ": " + (char)(row_indx + 'A') + (column_indx + 1) + ", "
+                            + _seat[row_indx][column_indx].getName());
+                }
+            }
+        }
     }
 
     void cancel(){
+        String _name;
+
+        System.out.print("Please enter your name: ");
+        _name = Theater.input.next();
+
+        // TODO : optimization of the cancellation process
+        for(int row_indx = 0; row_indx < _row; row_indx++) {
+            for(int column_indx = 0; column_indx < _column; column_indx++) {
+                if (_seat[row_indx][column_indx].match(_name)) {
+                    _seat[row_indx][column_indx].cancel();
+                }
+            }
+        }
 
     }
 
@@ -121,7 +173,7 @@ class SeatMap{
             for(int column_indx = 0; column_indx < _column; column_indx++){
                 System.out.print(" [");
                 if(_seat[row_indx][column_indx].isOccupied())
-                    System.out.print(" 0]");
+                    System.out.print("0]");
                 else
                     System.out.print(" ]");
             }
@@ -158,7 +210,7 @@ class Seat{
     }
 
     boolean match(String name){
-        return (reserver_name.equals(name));
+        return (reserver_name != null)? reserver_name.equals(name) : false;
     }
 }
 
