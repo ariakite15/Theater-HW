@@ -9,13 +9,13 @@ import java.util.InputMismatchException;
 class SeatMap2{
 
     private int _row, _column;
-    private Seat2 _seat[][];
+    private Seat _seat[][];
     Scanner input;
 
-    SeatMap2(int row, int column){ //constructor
+    SeatMap(int row, int column){ //constructor
         _row = row;
         _column= column;
-        _seat = new Seat2[_row][_column];
+        _seat = new Seat[_row][_column];
         seat_allocate();
         input = new Scanner(System.in);
     }
@@ -23,7 +23,7 @@ class SeatMap2{
     private void seat_allocate() {
         for (int row_idx = 0; row_idx < _row; row_idx++) {
             for (int col_idx = 0; col_idx < _column; col_idx++)
-                _seat[row_idx][col_idx] = new Seat2(); //저장 공간 만들기
+                _seat[row_idx][col_idx] = new Seat(); //저장 공간 만들기
         }
     }
 
@@ -102,7 +102,7 @@ class SeatMap2{
 
     void view(){
         System.out.println();
-        //System.out.println(Seat2.getName(reserver));
+        //System.out.println(Seat.getName(reserver));
 
     }
 
@@ -134,10 +134,10 @@ class SeatMap2{
 
 }
 
-class Seat2{
+class Seat{
     static boolean reserved;
 
-    Seat2(){
+    Seat(){
         reserved = false;
 
     }
@@ -169,7 +169,7 @@ public class Theater {
     public static Scanner input = new Scanner(System.in);
 
     public static void main(String[] args){
-        SeatMap2 myTheater = new SeatMap2(SEAT_ROW, SEAT_COLUMN);
+        SeatMap myTheater = new SeatMap(SEAT_ROW, SEAT_COLUMN);
         String _input;
 
 
