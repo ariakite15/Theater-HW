@@ -5,10 +5,6 @@ import java.util.InputMismatchException;
 /**
  * Created by cap on 4/15/16.
  */
-package Movie;
-        import java.util.InputMismatchException;
-        import java.util.Scanner;
-
 
 class SeatMap2{
 
@@ -69,7 +65,7 @@ class SeatMap2{
                     }
                     for(int row_indx = 0; row_indx < _row; row_indx++) {
                         for (int column_indx = 0; column_indx < _column; column_indx++){
-                            
+
 
                         }
                     }
